@@ -4,7 +4,23 @@ This is a minimal guest component project for the `aa:packet/packet-hook` WIT wo
 
 ## What it does
 
-Will be updated
+This project is a minimal Wasmtime guest component for `aa-proxy-rs`.
+
+It demonstrates how to:
+
+- implement the `aa:packet/packet-hook` WIT world
+- receive packet data from the host as typed WIT records
+- inspect packet metadata such as proxy type, channel, flags, message id, and payload
+- read selected host-side context/config values passed into the guest
+- return a decision such as `forward` or `drop`
+- call host functions to:
+  - replace the current packet
+  - send a new packet
+  - write host-side log messages
+
+The component is meant to be compiled into a `.wasm` WebAssembly component and then loaded by `aa-proxy-rs` from the hook directory.
+
+In short, this repo is a starting point for writing packet-processing hooks for `aa-proxy-rs` in Rust, compiled to Wasmtime components.
 
 ## Build
 
