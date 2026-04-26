@@ -11,6 +11,17 @@ use bindings::aa::packet::types::{ModifyContext, ConfigView, Decision, Packet, P
 struct Component;
 
 impl Guest for Component {
+    fn ws_script_handler(topic: String, payload: String) -> String {
+        host::info("ws event");
+        if topic == "script.get-speed" {
+            return host::rest_call("GET", "/speed", "");
+        }
+    
+        let _ = payload;
+    
+        "".to_string()
+    }
+
     fn modify_packet(ctx: ModifyContext, pkt: Packet, cfg: ConfigView) -> Decision {
         match pkt.proxy_type {
             ProxyType::HeadUnit => {
