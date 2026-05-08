@@ -34,6 +34,19 @@ interface types {
     forward,
     drop,
   }
+
+  record custom-config-entry {
+    name: string,
+    typ: string,
+    description: string,
+    default-value: string,
+    values: option<list<string>>,
+  }
+
+  record custom-config-section {
+    title: string,
+    values: list<custom-config-entry>,
+  }
 }
 
 interface host {
@@ -45,6 +58,8 @@ interface host {
   info: func(msg: string);
   error: func(msg: string);
 
+  get-config: func(name: string) -> option<string>;
+
   send-ws-event: func(topic: string, payload: string) -> bool;
 
   rest-call: func(method: string, path: string, body: string) -> string;
@@ -53,9 +68,15 @@ interface host {
 }
 
 world packet-hook {
-  use types.{modify-context, packet, config-view, decision};
+  use types.{modify-context, packet, config-view, decision, custom-config-section};
 
   import host;
+
+  export on-create: func();
+  export on-destroy: func();
+
+  export custom-configs: func() -> list<custom-config-section>;
+  export on-config-changed: func(name: string, value: string);
 
   export modify-packet: func(ctx: modify-context, pkt: packet, cfg: config-view) -> decision;
   export ws-script-handler: func(topic: string, payload: string) -> string;
